@@ -1,0 +1,101 @@
+@import "tailwindcss";
+@import "leaflet/dist/leaflet.css";
+
+@theme {
+  --color-brand-50: #eff6ff;
+  --color-brand-100: #dbeafe;
+  --color-brand-200: #bfdbfe;
+  --color-brand-300: #93c5fd;
+  --color-brand-400: #60a5fa;
+  --color-brand-500: #3b82f6;
+  --color-brand-600: #2563eb;
+  --color-brand-700: #1d4ed8;
+  --color-brand-800: #1e40af;
+  --color-brand-900: #1e3a8a;
+
+  --color-surface: #ffffff;
+  --color-surface-muted: #f8fafc;
+  --color-border: #e2e8f0;
+  --color-text: #0f172a;
+  --color-text-muted: #64748b;
+
+  --font-sans: var(--font-inter), ui-sans-serif, system-ui, sans-serif;
+  --font-display: var(--font-playfair), ui-serif, Georgia, serif;
+
+  --radius-card: 0.75rem;
+  --radius-button: 0.5rem;
+}
+
+@layer base {
+  html {
+    @apply antialiased;
+  }
+
+  body {
+    @apply bg-surface text-text;
+    font-family: var(--font-sans);
+  }
+}
+
+@layer utilities {
+  .font-display {
+    font-family: var(--font-display);
+  }
+
+  .sr-only {
+    position: absolute;
+    width: 1px;
+    height: 1px;
+    padding: 0;
+    margin: -1px;
+    overflow: hidden;
+    clip: rect(0, 0, 0, 0);
+    white-space: nowrap;
+    border-width: 0;
+  }
+
+  .focus\:not-sr-only:focus {
+    position: static;
+    width: auto;
+    height: auto;
+    padding: inherit;
+    margin: inherit;
+    overflow: visible;
+    clip: auto;
+    white-space: normal;
+  }
+}
+
+/* Generated customer sites use owner accent via inline style on root */
+.site-template {
+  --site-accent: var(--color-brand-600);
+  container-type: inline-size;
+}
+
+/* Builder live preview — same template, phone-width column */
+.site-template--inline-preview .site-hero {
+  min-height: 14rem;
+}
+
+.site-template--inline-preview .site-hero-content {
+  min-height: 14rem;
+  padding-top: 3rem;
+  padding-bottom: 2rem;
+}
+
+.site-template--inline-preview .site-hero-title {
+  font-size: 1.75rem;
+  line-height: 2.25rem;
+}
+
+.site-template--inline-preview .site-section {
+  padding-top: 2.5rem;
+  padding-bottom: 2.5rem;
+}
+
+/* Leaflet fills a sized parent — set height on the wrapper (e.g. h-64), not on .leaflet-container */
+.leaflet-container {
+  width: 100%;
+  height: 100%;
+  z-index: 0;
+}

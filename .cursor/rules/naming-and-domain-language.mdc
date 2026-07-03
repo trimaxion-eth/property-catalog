@@ -1,0 +1,19 @@
+---
+description: Clear naming and domain language conventions
+globs:
+  - "**/*.ts"
+  - "**/*.tsx"
+alwaysApply: false
+---
+
+# Naming and Domain Language
+
+Use domain terms, not implementation guesses.
+
+- **Files**: Name by responsibility (`QuestionnaireSidebar`, `SiteHeroSection`, not `StepFlow`).
+- **Avoid vague names**: `Manager`, `Helper`, `Data`, `Stuff`.
+- **Functions**: Verb + domain object (`generateRoomDescriptions`, `resolveSiteByHost`).
+- **Booleans**: Name exact behavior (`isQuestionnaireComplete`, not `isReady`).
+- **Consistency**: Same action name across route, service, hook, and UI.
+
+Domain vocabulary: **site** (generated property website), **property** (owner's accommodation), **room** (bookable unit), **questionnaire** (builder input), **publish** (go live on custom domain).

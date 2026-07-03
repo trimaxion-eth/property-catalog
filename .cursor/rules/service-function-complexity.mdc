@@ -1,0 +1,14 @@
+---
+description: Service-layer complexity and decomposition guardrails
+globs: src/lib/services/**/*.ts
+alwaysApply: false
+---
+
+# Service Function Complexity
+
+- **Single concern** — validate, orchestrate, or apply side effects; split when mixed heavily.
+- **Decompose** long branches into private helpers with intent-revealing names.
+- **Side effects last** — validations and checks before DB writes or LLM calls.
+- **Stable contracts** — refactoring internals must not change API response shape unless requested.
+
+The site generation happy path should read top-to-bottom: validate answers → call LLM per section → assemble `SiteContent` → return preview payload.

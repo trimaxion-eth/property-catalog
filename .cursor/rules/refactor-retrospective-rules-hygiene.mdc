@@ -1,0 +1,15 @@
+---
+description: Refactor retrospective process for keeping rules up to date
+alwaysApply: true
+---
+
+# Refactor Retrospective and Rules Hygiene
+
+After every substantial refactor:
+
+1. **List issues found** — naming, structure, duplication, complexity, contract pitfalls.
+2. **Classify** — covered by existing rule, ambiguous rule, or no rule.
+3. **Update rules** — clarify weak rules or add focused new `.mdc` files via @rule-creation-guidelines.mdc.
+4. **Summarize** in the final response which rules changed and why.
+
+Do not finish a major refactor without deciding whether rules need updating.

@@ -1,0 +1,23 @@
+---
+description: Feature implementation workflow for spec-driven development
+alwaysApply: true
+---
+
+# Feature Implementation Workflow
+
+## During Implementation
+
+1. **Track progress** against the active phase in `spec.md`.
+2. **Document decisions** — deviations, clarifications, and tradeoffs.
+
+## After Implementation
+
+1. **Verify** the implementation matches `spec.md` and the active phase scope.
+2. **Test** happy path and obvious edge cases.
+3. **Update `spec.md`** with findings, status, deviations, and known limitations.
+4. **Update or create rules** when a repeatable pattern emerges. See @rule-creation-guidelines.mdc.
+
+## Phase Discipline
+
+- **Phase 1**: Questionnaire, LLM generation, fixed template preview — no auth, no persistence, no payments.
+- **Phase 2+**: Only after Phase 1 is complete and spec is updated.

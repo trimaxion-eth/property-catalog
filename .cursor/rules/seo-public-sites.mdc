@@ -1,0 +1,21 @@
+---
+description: SEO, accessibility, and performance for generated public sites
+globs:
+  - "src/components/site/**/*.tsx"
+  - "src/app/**/sitemap*"
+  - "src/app/**/robots*"
+alwaysApply: false
+---
+
+# SEO, Accessibility, Performance
+
+Generated sites must be guest-ready (per promo footer bar).
+
+- **Unique metadata** per page — title, description, Open Graph from `SiteContent.meta`.
+- **Structured data** — `LodgingBusiness` / `Hotel` JSON-LD on home; `Room` on room pages (Phase 2 publish).
+- **Semantic HTML** — landmarks, heading hierarchy, meaningful `alt` on all images.
+- **Performance** — Next.js Image with responsive sizes; lazy-load below-fold gallery images.
+- **Mobile responsive** — primary browse context for guests.
+- **Sitemap + robots.txt** — generated per published site (Phase 2).
+
+Phase 1 preview should still render correct heading structure and alt text using questionnaire/LLM output.

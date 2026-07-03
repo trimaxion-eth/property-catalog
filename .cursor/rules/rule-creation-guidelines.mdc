@@ -1,0 +1,16 @@
+---
+description: Guidelines for creating and editing Cursor project rules
+globs:
+  - ".cursor/rules/**/*.md"
+  - ".cursor/rules/**/*.mdc"
+alwaysApply: false
+---
+
+# Rule Creation Guidelines
+
+- **One purpose per rule** — focused, actionable, scoped.
+- **Under 500 lines** — split large rules into composable files.
+- **Reference over copy** — point to canonical files with `@filename` instead of stale snippets.
+- **No redundancy** — don't duplicate linter config or obvious tool usage.
+
+Start simple; add rules when the same mistake repeats twice.

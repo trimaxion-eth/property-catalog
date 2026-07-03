@@ -1,0 +1,17 @@
+---
+description: React component structure and extraction patterns
+globs:
+  - "src/components/**/*.tsx"
+  - "src/app/**/*.tsx"
+alwaysApply: false
+---
+
+# Frontend Component Structure
+
+- **Size**: Keep components under ~200 lines. Extract before they grow larger.
+- **Builder dashboard**: Layout shell (nav + sidebar + preview pane). Questionnaire steps as separate step components. Parent owns step index and form state.
+- **Public site template**: One layout component per template; page sections (hero, room grid, gallery, map, contact) as separate components driven by `SiteContent` JSON.
+- **Hooks**: Custom hooks in `src/hooks/`. Co-locate only small presentational extractions with the parent.
+- **Server vs client**: Default to Server Components. Add `"use client"` only for interactivity (form state, preview toggles, TanStack Query).
+
+One clear responsibility per file; parents orchestrate, children render.

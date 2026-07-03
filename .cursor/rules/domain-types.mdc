@@ -1,0 +1,21 @@
+---
+description: Domain and API types — single source of truth in src/lib/types
+alwaysApply: false
+---
+
+# Domain Types
+
+All types shared across UI, API routes, services, and the site renderer live in `src/lib/types/`.
+
+| Kind | Location | Example |
+| ---- | -------- | ------- |
+| Enums / status unions | `src/lib/types/enums.ts` | `SiteStatus`, `BookingChannel` |
+| Domain entities | `src/lib/types/<domain>.ts` | `Site`, `Room`, `QuestionnaireAnswers` |
+| Generated site content | `src/lib/types/site-content.ts` | `SiteContent`, `HomePageContent` |
+| API shapes | `src/lib/types/api.ts` | `ApiResponse<T>`, `GenerateSiteRequest` |
+
+- Drizzle-inferred row types come from `src/db/schema.ts` for DB layer only.
+- API request/response shapes use domain types — not raw Drizzle rows in route responses.
+- Re-export from `src/lib/types/index.ts` for convenient imports.
+
+**Don't** duplicate types in components or duplicate API shapes in route files.

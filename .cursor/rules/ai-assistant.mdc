@@ -1,0 +1,48 @@
+---
+description: General coding guidelines for AI assistants
+globs:
+  - "**/*.ts"
+  - "**/*.tsx"
+  - "**/*.js"
+  - "**/*.jsx"
+alwaysApply: true
+---
+
+# AI Assistant Coding Guidelines
+
+## Core Principles
+
+1. **Read before writing** — Always read files before modifying them.
+2. **Clarify ambiguity** — If requirements admit multiple interpretations, ask before implementing.
+3. **Avoid over-engineering** — Only change what is requested or clearly necessary.
+4. **Minimize complexity** — Three similar lines beats a premature abstraction. Validate at system boundaries only.
+5. **No backwards-compatibility hacks** — Delete unused code; don't prefix with `_` or leave tombstone comments.
+
+## Project-Specific Patterns
+
+- **Package manager**: Use **pnpm** (install, scripts, add dependencies).
+- **Architecture**: Single Next.js App Router app — builder dashboard + public site renderer in one process.
+- **Types**: Domain and API types live in `src/lib/types/` only. See @domain-types.mdc.
+- **Data access**: Repositories in `src/lib/repositories/` only. See @backend-repositories.mdc.
+- **Errors**: See @error-handling.mdc.
+- **DB schema**: See @db-schema-workflow.mdc.
+- **Env**: `getServerEnv()` / `getClientEnv()` from `@/lib/config/env` (lazy, server-only).
+
+## Patterns Checklist
+
+- **domain-types**: Single source of truth in `src/lib/types/`; no duplicate API shapes
+- **backend-repositories**: No Drizzle/`db` imports in services, route handlers, or components
+- **frontend-component-structure**: Components under ~200 lines; extract when larger
+- **frontend-query-hooks**: Domain hooks in `src/lib/queries/` with `queryKeys` from `src/lib/constants/`
+- **constants-and-enums**: No magic strings for domain values
+- **llm-content-generation**: Keep prompts and generation service in sync with content schema
+- **design-system**: Use StaySite tokens; no ad-hoc hex in components
+
+## Verification
+
+Run `pnpm exec tsc --noEmit` after TypeScript changes. Fix all errors before finishing.
+
+## Golden Rules
+
+1. Consistency > cleverness
+2. Phase scope from `spec.md` — don't build Phase 2+ features during Phase 1 work

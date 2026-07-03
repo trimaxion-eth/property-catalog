@@ -1,0 +1,20 @@
+---
+description: SQLite schema update workflow with Drizzle
+globs:
+  - "src/db/schema.ts"
+  - "src/lib/repositories/**/*.ts"
+  - "drizzle.config.ts"
+alwaysApply: false
+---
+
+# DB Schema Workflow
+
+When changing database schema or repository queries:
+
+1. Edit `src/db/schema.ts`.
+2. Run **`pnpm run db:push`** as the default apply workflow.
+3. Do **not** generate or edit SQL migration files unless explicitly requested.
+4. Run **`pnpm exec tsc --noEmit`** after schema changes.
+5. SQLite settings: WAL mode, `busy_timeout` 5000ms — configure in the DB connection module.
+
+Phase 1 may run without a database. Introduce schema when Phase 2 persistence begins.

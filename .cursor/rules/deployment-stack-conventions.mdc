@@ -1,0 +1,22 @@
+---
+description: Docker, Caddy, Litestream, and Hetzner deployment conventions
+globs:
+  - "docker/**/*"
+  - "docker-compose.yml"
+  - "Caddyfile"
+  - ".github/workflows/**/*.yml"
+alwaysApply: false
+---
+
+# Deployment Stack Conventions
+
+Per `spec.md`:
+
+- **Three containers**: `app` (Next.js), `caddy` (reverse proxy + on-demand TLS + static uploads), `litestream` (SQLite WAL replication).
+- **Volumes**: `db-data`, `uploads`, `caddy-data`.
+- **Caddy on-demand TLS**: Unknown domain → `GET /api/domain-check` on app → provision cert if registered.
+- **Uploads**: Sharp writes to `/data/uploads/{siteId}/`; Caddy serves with long cache headers.
+- **Secrets**: GitHub/VPS env only — never commit `.env` or credentials.
+- **Backups**: Litestream continuous WAL + nightly rclone for uploads.
+
+Keep deployment docs in sync when topology changes.

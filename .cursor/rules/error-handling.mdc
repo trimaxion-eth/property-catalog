@@ -1,0 +1,23 @@
+---
+description: Error handling — API routes, Server Actions, and client
+globs:
+  - "src/app/api/**/*.ts"
+  - "src/lib/**/*.ts"
+  - "src/components/**/*.tsx"
+alwaysApply: false
+---
+
+# Error Handling
+
+**API routes & Server Actions:**
+- Use `src/lib/errors.ts` helpers (`ValidationError`, `NotFoundError`, `AppError`).
+- Return consistent JSON error shapes via `handleApiError(error)`.
+- Validate input with Zod at the route boundary; throw `ValidationError` on failure.
+- No bare `try/catch` in every handler — centralize in a small wrapper or `handleApiError`.
+
+**Client (builder dashboard):**
+- Use `handleClientError(error)` from `src/lib/errors.ts` for mutations and fetches.
+- No `console.error` for user-visible failures — route through the error helper (toast or inline message).
+
+**Public site renderer:**
+- Fail gracefully — missing site content shows a simple 404, not a stack trace.

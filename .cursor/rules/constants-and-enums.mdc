@@ -1,0 +1,16 @@
+---
+description: Use shared constants and enums; no magic strings
+globs:
+  - "src/lib/constants/**/*.ts"
+  - "src/lib/types/enums.ts"
+alwaysApply: false
+---
+
+# Constants and Enums
+
+1. **Types** — Union types in `src/lib/types/enums.ts`.
+2. **Constants** — Arrays and single-value exports in `src/lib/constants/index.ts`, typed from enums.
+3. **Usage** — Use constants everywhere instead of string literals.
+4. **Query keys** — All TanStack Query keys as factories in `src/lib/constants/query-keys.ts`, returning `as const` tuples. Use in every `useQuery`, `useMutation`, and `invalidateQueries`.
+
+Reference `QUESTIONNAIRE_STEPS`, `SITE_PAGES`, and `queryKeys` for the pattern.

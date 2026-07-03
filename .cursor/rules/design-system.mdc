@@ -1,0 +1,38 @@
+---
+description: StaySite design system — colors, typography, and UI patterns from product design
+globs:
+  - "src/app/**/*.tsx"
+  - "src/components/**/*.tsx"
+  - "src/styles/**/*.css"
+  - "tailwind.config.ts"
+alwaysApply: false
+---
+
+# Design System (StaySite)
+
+Aligned with `promo.png` product design.
+
+## Brand
+
+- **Product name**: StaySite
+- **Tagline**: "AI Websites for Hotels & Rentals"
+- **Primary**: StaySite blue (`--color-brand` / `brand-600`) for CTAs, progress, links
+- **Neutrals**: White backgrounds, clean gray text hierarchy, generous whitespace
+- **Corners**: Rounded buttons and cards (`rounded-lg` / `rounded-xl`)
+- **Photography**: Full-bleed hero images; room cards in 3-column grid on desktop
+
+## Builder UI
+
+- **Top nav**: Logo, Sites, Help, profile avatar
+- **Left sidebar**: Step checklist with completion checkmarks; sticky "Generate My Website" CTA at bottom
+- **Right pane**: Live site preview (desktop frame); mobile preview optional in Phase 1
+- **Progress**: Describe → Generate → Customize → Publish (marketing); builder uses 7 questionnaire steps
+
+## Generated site template
+
+- **Header**: Property name, nav (Rooms, Gallery, Location, Contact), prominent "Book Now"
+- **Hero**: Full-width image, headline, subheadline (location), primary CTA
+- **Home sections**: Room highlights grid, amenity highlights, trust/essentials bar
+- **Mobile-first**: Stack columns; touch-friendly CTAs
+
+Use Tailwind theme tokens — no ad-hoc hex in components. Owner brand color from questionnaire applies as CSS variable `--site-accent`.

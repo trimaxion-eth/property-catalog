@@ -1,0 +1,17 @@
+---
+description: Environment variable access — use config module, never process.env in app code
+globs:
+  - "src/**/*.ts"
+  - "src/**/*.tsx"
+alwaysApply: false
+---
+
+# Environment Configuration
+
+- Import `getServerEnv` from `src/lib/config/env.ts` — never use `process.env` directly in application code.
+- New vars: add to the Zod schema in `env.ts` with types, defaults, and validation.
+- Config validates on startup; invalid config crashes with a descriptive error.
+- **Client-safe vars** only via `NEXT_PUBLIC_` prefix; validate in `env.ts` and expose through the config module.
+- **Secrets** (OpenCode Go API key in `OPENAI_API_KEY`, Stripe, Better Auth secret) are server-only — never import server `env` in client components.
+
+**Pattern:** `import { getServerEnv } from "@/lib/config/env"` in server code; use `getClientEnv()` for browser-safe values.

@@ -1,0 +1,30 @@
+---
+description: Accommodation site builder and renderer patterns
+globs:
+  - "src/components/builder/**/*.tsx"
+  - "src/components/site/**/*.tsx"
+  - "src/lib/services/**/*site*.ts"
+  - "src/lib/types/site-content.ts"
+  - "src/lib/types/questionnaire.ts"
+alwaysApply: false
+---
+
+# Accommodation Site Patterns
+
+## Builder (dashboard)
+
+- **Questionnaire steps** (from product design): Property Details → Rooms & Accommodation → Amenities & Services → Location → Photos → Contact & Branding → Booking Settings.
+- **Thin API routes** — validate, call service, return typed response.
+- **Preview** reads the same `SiteContent` JSON the public renderer will use — no separate preview markup.
+
+## Public site renderer
+
+- **Host-header routing** (Phase 2+): `middleware.ts` resolves site from `Host`; Phase 1 uses a preview route with site ID or slug in path.
+- **Fixed template v1** — one well-designed template; sections driven entirely by `SiteContent`.
+- **Pages**: Home, Rooms, Gallery, Location, Contact (spec). Promo nav also shows About — map to Home subsection or dedicated section until a 6th page is approved.
+- **Book Now** — links to owner's configured channel (email, WhatsApp, external URL); no native booking in Phase 1.
+
+## Content model
+
+- All editable/generated content in `SiteContent` JSON shape.
+- Regeneration overwrites specific sections; manual edits update JSON fields directly.

@@ -1,0 +1,21 @@
+---
+description: LLM content generation service and content schema sync
+globs:
+  - "src/lib/services/**/*llm*.ts"
+  - "src/lib/services/**/*generat*.ts"
+  - "src/lib/types/site-content.ts"
+  - "src/app/api/**/generate/**/*.ts"
+alwaysApply: false
+---
+
+# LLM Content Generation
+
+When adding, changing, or removing generated content sections:
+
+1. **Define or update types** in `src/lib/types/site-content.ts` first.
+2. **Update** `src/lib/services/content-generation.ts` (prompts, section calls, assembly).
+3. **One LLM call per section** — property description, each room, meta tags, CTA copy (per spec).
+4. **Prompts** live alongside the service or in `src/lib/prompts/` — not inline in route handlers.
+5. **Validate output** with Zod before merging into `SiteContent`.
+
+Do not leave the generation service out of date after schema or questionnaire changes.

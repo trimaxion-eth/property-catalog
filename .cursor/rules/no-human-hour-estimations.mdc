@@ -1,0 +1,10 @@
+---
+description: Never add human-hour estimates to code plans or refactors
+alwaysApply: false
+---
+
+# No Human Labor Hour Estimates
+
+Do not add human-hour estimates (e.g. "~2 hours") to plans, task lists, or refactors.
+
+List tasks and phases without duration estimates. When asked for time estimates, explain that AI builds code directly so human-hour estimates don't apply.

@@ -1,0 +1,14 @@
+---
+description: Clarify feature scope in Plan mode with multiple-choice questions
+alwaysApply: true
+---
+
+# Feature Clarification
+
+When requirements are unclear or involve meaningful tradeoffs, do not guess.
+
+1. **Switch to Plan mode** before implementing ambiguous features.
+2. **Use structured multiple-choice** (AskQuestion tool when available) with 2+ concrete options per question.
+3. **Summarize decisions** in the plan; implement only when scope is verifiable.
+
+Applies to new product behavior, screens/flows, APIs, and cross-cutting features — not trivial bugfixes.

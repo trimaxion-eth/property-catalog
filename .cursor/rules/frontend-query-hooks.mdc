@@ -1,0 +1,14 @@
+---
+description: TanStack Query hooks — domain files, query keys, mutation invalidation
+globs:
+  - "src/lib/queries/**/*.ts"
+  - "src/hooks/**/*.ts"
+alwaysApply: false
+---
+
+# Frontend Query Hooks
+
+- **Domain files**: One file per domain under `src/lib/queries/` — `sites.ts`, `generation.ts`. Add hooks to the existing domain file.
+- **Query keys**: Use factories from `src/lib/constants/query-keys.ts`. No inline key arrays.
+- **Mutations**: Invalidate all affected caches in `onSuccess` via `queryClient.invalidateQueries`.
+- **Phase 1**: Most builder state may live in React context or URL state; add query hooks when server persistence arrives in Phase 2.

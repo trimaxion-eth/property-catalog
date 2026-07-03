@@ -1,0 +1,17 @@
+---
+description: Data access — repository layer only
+globs:
+  - "src/lib/repositories/**/*.ts"
+  - "src/lib/services/**/*.ts"
+  - "src/app/api/**/*.ts"
+alwaysApply: false
+---
+
+# Repository Layer
+
+- **Data access** only in `src/lib/repositories/`. One file per domain; plain exported functions with typed args and returns.
+- **No Drizzle in** services, route handlers, Server Actions, or components.
+- **Services** = business logic and orchestration; **repositories** = all DB access.
+- **Phase 1 exception**: In-memory or sessionStorage preview state is fine without repositories until Phase 2 persistence lands.
+
+When adding persistence (Phase 2+): add repository first, then wire services and API routes to it.
