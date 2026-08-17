@@ -2,6 +2,9 @@
 
 import { useEffect, useRef } from "react";
 import { getRasterTileLayerConfig } from "@/lib/map/tileLayerConfig";
+import markerIcon from "leaflet/dist/images/marker-icon.png";
+import markerIcon2x from "leaflet/dist/images/marker-icon-2x.png";
+import markerShadow from "leaflet/dist/images/marker-shadow.png";
 
 type PropertyMapPickerProps = {
   latitude: number;
@@ -40,6 +43,12 @@ export function PropertyMapPicker({
       const raw = await import("leaflet");
       const L = ((raw as { default?: unknown }).default ?? raw) as typeof import("leaflet");
       if (cancelled || !hostRef.current) return;
+
+      L.Icon.Default.mergeOptions({
+        iconUrl: markerIcon.src,
+        iconRetinaUrl: markerIcon2x.src,
+        shadowUrl: markerShadow.src,
+      });
 
       const tileCfg = getRasterTileLayerConfig();
       const center = hasValidCoordinates(latitude, longitude)
