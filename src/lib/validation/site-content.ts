@@ -5,6 +5,7 @@ import {
   imageCategorySchema,
   propertyTypeSchema,
 } from "@/lib/validation/enums";
+import { siteStyleSchema } from "@/lib/validation/site-style";
 
 export const siteImageSchema = z.object({
   url: z.string().url(),
@@ -119,6 +120,7 @@ export const siteContentSchema = z.object({
   location: siteLocationSchema,
   amenities: siteAmenitiesSchema,
   contactPage: siteContactPageSchema,
+  style: siteStyleSchema.optional(),
 });
 
 export type SiteImage = z.infer<typeof siteImageSchema>;

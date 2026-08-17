@@ -39,6 +39,12 @@ export type {
 } from "./site-content";
 
 export type {
+  LayoutPreferencesPayload,
+  SectionInteraction,
+  SectionLayoutPreference,
+} from "./layout-preferences";
+
+export type {
   ApiErrorBody,
   ApiResponse,
   GenerateSiteRequest,

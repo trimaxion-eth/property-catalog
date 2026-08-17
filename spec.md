@@ -96,10 +96,25 @@ Internet → Caddy (reverse proxy + on-demand TLS) → Next.js app
 
 ## Implementation Phases
 
+### AI site styling (Phase 1 extension)
+
+Owners do **not** complete a separate style questionnaire. Style is inferred at generate time from existing answers (property type, tagline, location, amenities, rooms/pricing) plus optional nudges on **Contact & Branding**:
+
+| Owner input | Required? | Notes |
+| ----------- | --------- | ----- |
+| Brand accent color | Yes (picker) | Owner color wins unless “Suggest a color for me” is enabled |
+| Website feel | Optional | `auto` (default), `refined`, or `bold` — biases visual weight only |
+
+**One `siteStyle` LLM call** per generation returns curated tokens (not raw CSS): tone, typography, surface, hero/nav layout IDs, card style, button shape, hero overlay, section density, link emphasis, and a one-sentence `rationale` for the builder.
+
+**Precedence:** owner accent → existing soft-preview layout rotations → optional feel chip → LLM tokens → code fallbacks.
+
+`SiteContent.style` is persisted with generated content. The template maps tokens to CSS variables on `.site-template`. Layout preferences seed from `style.layouts` when the owner has not already rotated hero/nav.
+
 ### Phase 1: Generator
 
 - Questionnaire: 7 steps; all required (Photos step auto-fills picsum placeholders)
-- Single LLM call per content section; **one LLM call per room** for descriptions
+- Single LLM call per content section; **one LLM call per room** for descriptions; **one `siteStyle` call** per site
 - One fixed template matching `promo.png` (Halcyon-style boutique layout)
 - Output: 5 pages (Home, Rooms, Gallery, Location, Contact) at `/preview/[siteId]/…`
 - Booking: single channel — all "Book Now" CTAs use owner's configured target
@@ -197,7 +212,7 @@ All site content lives as JSON in the `sites` table. The renderer reads this JSO
 - **Backups:** Litestream streams WAL changes continuously. Images backed up via nightly rclone to Storage Box. Test restoration before launch.
 - **Database locks:** WAL mode + busy_timeout handles it. If you see lock errors, investigate long-running transactions, not connection pooling.
 - **Image disk usage:** Monitor `/data/uploads` growth. Each site with 20 photos at 4 sizes generates ~80 files. Cheap to store, but back it up.
-- **LLM cost:** One site generation = roughly 5–8 API calls (property description, each room, meta tags, CTA copy). OpenCode Go subscription includes usage limits; see [OpenCode Go docs](https://opencode.ai/docs/go/).
+- **LLM cost:** One site generation = roughly 6–9 API calls (property description, each room, meta tags, CTA copy, site style). OpenCode Go subscription includes usage limits; see [OpenCode Go docs](https://opencode.ai/docs/go/).
 - **Scaling:** Single server handles hundreds of sites and thousands of daily visitors. When you outgrow it, the migration path is: add Cloudflare in front (free), then move DB to separate server, then consider Postgres.
 
 ---
@@ -217,7 +232,7 @@ Cursor rules in `.cursor/rules/` adapt patterns from sibling projects (dock, hot
 
 | Phase | Status | Notes |
 | ----- | ------ | ----- |
-| Phase 1: Generator | **Complete** | All tasks 1–9 done. Run `pnpm verify` before releases. LLM: OpenCode Go. |
+| Phase 1: Generator | **Complete** | All tasks 1–9 done. **Soft preview** + **AI site styling** (one `siteStyle` LLM call; tokens on `SiteContent.style`; optional feel chips on Contact & Branding). Layout prefs seed from style when owner has not rotated hero/nav. |
 | Phase 2: Publishing & Accounts | Not started | — |
 | Phase 3: Booking & Conversion | Not started | — |
 | Phase 4: Growth | Not started | — |

@@ -3,28 +3,26 @@
 import { MAX_ROOMS, MIN_ROOMS, SUPPORTED_CURRENCIES } from "@/lib/constants";
 import { createRoomEntry } from "@/lib/questionnaire/helpers";
 import type { QuestionnaireDraft } from "@/lib/types/questionnaire";
+import type { StepProps } from "@/components/builder/steps/types";
 import { Button } from "@/components/ui/Button";
 import { FormField } from "@/components/ui/FormField";
 import { Input } from "@/components/ui/Input";
 import { Select } from "@/components/ui/Select";
 import { Textarea } from "@/components/ui/Textarea";
 
-type StepProps = {
-  draft: QuestionnaireDraft;
-  onChange: (updater: (current: QuestionnaireDraft) => QuestionnaireDraft) => void;
-};
-
-export function RoomsStep({ draft, onChange }: StepProps) {
+export function RoomsStep({ draft, onChange, embedded = false }: StepProps) {
   const { rooms } = draft;
 
   return (
-    <div className="space-y-5">
-      <div>
-        <h1 className="text-xl font-semibold text-text">Rooms &amp; Accommodation</h1>
-        <p className="mt-1 text-sm text-text-muted">
-          Add up to {MAX_ROOMS} room types. Price is optional.
-        </p>
-      </div>
+    <div className={embedded ? "space-y-4" : "space-y-5"}>
+      {!embedded ? (
+        <div>
+          <h1 className="text-xl font-semibold text-text">Rooms &amp; Accommodation</h1>
+          <p className="mt-1 text-sm text-text-muted">
+            Add up to {MAX_ROOMS} room types. Price is optional.
+          </p>
+        </div>
+      ) : null}
 
       <FormField label="Currency" htmlFor="currency">
         <Select
@@ -52,7 +50,7 @@ export function RoomsStep({ draft, onChange }: StepProps) {
         {rooms.rooms.map((room, index) => (
           <div
             key={room.id}
-            className="space-y-3 rounded-card border border-border bg-surface-muted/50 p-4"
+            className="space-y-3 rounded-card border border-border bg-surface-muted/50 p-3"
           >
             <div className="flex items-center justify-between">
               <h2 className="text-sm font-semibold text-text">Room {index + 1}</h2>
@@ -94,7 +92,7 @@ export function RoomsStep({ draft, onChange }: StepProps) {
               />
             </FormField>
 
-            <div className="grid gap-3 sm:grid-cols-2">
+            <div className={`grid gap-3 ${embedded ? "grid-cols-1" : "sm:grid-cols-2"}`}>
               <FormField label="Capacity (guests)" htmlFor={`room-capacity-${room.id}`}>
                 <Input
                   id={`room-capacity-${room.id}`}

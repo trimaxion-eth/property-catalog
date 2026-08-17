@@ -14,14 +14,16 @@ type QuestionnaireStepPanelProps = {
   activeStepId: QuestionnaireStepId;
   draft: QuestionnaireDraft;
   onChange: (updater: (current: QuestionnaireDraft) => QuestionnaireDraft) => void;
+  embedded?: boolean;
 };
 
 export function QuestionnaireStepPanel({
   activeStepId,
   draft,
   onChange,
+  embedded = false,
 }: QuestionnaireStepPanelProps) {
-  const stepProps = { draft, onChange };
+  const stepProps = { draft, onChange, embedded };
 
   switch (activeStepId) {
     case "property-details":

@@ -1,11 +1,41 @@
 import type {
   BookingChannelType,
+  BuilderJourneyStepId,
   CurrencyCode,
   ImageCategory,
   PropertyType,
   QuestionnaireStepId,
   SitePage,
 } from "@/lib/types/enums";
+import type { StylePreference } from "@/lib/types/site-style";
+import type { RotatableSectionId } from "@/lib/validation/layout-preferences";
+
+export const BUILDER_JOURNEY_STEPS: {
+  id: BuilderJourneyStepId;
+  label: string;
+  detail: string;
+}[] = [
+  {
+    id: "describe",
+    label: "Describe",
+    detail: "Answer questions about your property",
+  },
+  {
+    id: "generate",
+    label: "Generate",
+    detail: "AI creates your website in minutes",
+  },
+  {
+    id: "customize",
+    label: "Customize",
+    detail: "Review and tweak anything you like",
+  },
+  {
+    id: "publish",
+    label: "Publish",
+    detail: "Connect your domain and go live",
+  },
+];
 
 export const QUESTIONNAIRE_STEPS: {
   id: QuestionnaireStepId;
@@ -110,4 +140,30 @@ export const SESSION_STORAGE_KEYS = {
   questionnaire: "staysite:questionnaire",
   siteContent: "staysite:site-content",
   previewSiteId: "staysite:preview-site-id",
+  layoutPreferences: "staysite:layout-preferences",
 } as const;
+
+export function localStorageLayoutPreferencesKey(siteId: string): string {
+  return `staysite:layout-preferences:${siteId}`;
+}
+
+/** Rotatable sections enabled per rollout phase */
+export const ROTATABLE_SECTION_PHASE: Record<RotatableSectionId, 1 | 2 | 3> = {
+  hero: 1,
+  nav: 1,
+  rooms: 2,
+  gallery: 2,
+  location: 3,
+  footer: 3,
+};
+
+export const SOFT_PREVIEW_PHASE = 1 as const;
+
+export const STYLE_PREFERENCE_OPTIONS: {
+  id: StylePreference;
+  label: string;
+}[] = [
+  { id: "auto", label: "Match my property" },
+  { id: "refined", label: "Calm & refined" },
+  { id: "bold", label: "Bold & immersive" },
+];

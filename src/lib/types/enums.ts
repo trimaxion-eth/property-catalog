@@ -29,3 +29,9 @@ export type QuestionnaireStepId =
   | "photos"
   | "contact-branding"
   | "booking-settings";
+
+export type BuilderJourneyStepId =
+  | "describe"
+  | "generate"
+  | "customize"
+  | "publish";

@@ -17,6 +17,8 @@ import {
   buildMetaPrompt,
   buildRoomPrompt,
 } from "@/lib/prompts/sections";
+import { buildStylePrompt } from "@/lib/prompts/style";
+import { buildStyleSignals } from "@/lib/site/build-style-signals";
 import { callLlmJson } from "@/lib/services/llm-client";
 import {
   amenitiesCopySchema,
@@ -26,15 +28,14 @@ import {
   metaCopySchema,
   roomCopySchema,
 } from "@/lib/validation/llm-outputs";
+import {
+  llmOutputToSiteStyle,
+  llmSiteStyleOutputSchema,
+  resolveAccentColor,
+} from "@/lib/validation/site-style";
 import { siteContentSchema } from "@/lib/validation/site-content";
 
-function createPreviewSiteId(existing?: string): string {
-  if (existing) return existing;
-  if (typeof crypto !== "undefined" && "randomUUID" in crypto) {
-    return crypto.randomUUID();
-  }
-  return `site-${Date.now()}`;
-}
+import { createPreviewSiteId } from "@/lib/preview/preview-site-id";
 
 function buildSiteImage(
   seed: string,
@@ -78,10 +79,11 @@ export async function generateSiteContent(
   answers: QuestionnaireAnswers,
   previewSiteId?: string,
 ): Promise<GenerateSiteResponse> {
-  const siteId = createPreviewSiteId(previewSiteId);
+  const siteId = previewSiteId ?? createPreviewSiteId();
   const propertyName = answers.propertyDetails.propertyName;
+  const styleSignals = buildStyleSignals(answers);
 
-  const [homeCopy, amenitiesCopy, locationCopy, metaCopy, contactCopy] =
+  const [homeCopy, amenitiesCopy, locationCopy, metaCopy, contactCopy, styleLlm] =
     await Promise.all([
       callLlmJson({
         prompt: buildHomePrompt(answers),
@@ -108,7 +110,19 @@ export async function generateSiteContent(
         schema: contactCopySchema,
         schemaName: "contactCopy",
       }),
+      callLlmJson({
+        prompt: buildStylePrompt(answers, styleSignals),
+        schema: llmSiteStyleOutputSchema,
+        schemaName: "siteStyle",
+      }),
     ]);
+
+  const accentColor = resolveAccentColor(
+    answers.contactBranding.accentColor,
+    styleSignals.accentColorSource,
+    styleLlm.accentColor,
+  );
+  const siteStyle = llmOutputToSiteStyle(styleLlm);
 
   const roomCopies = await Promise.all(
     answers.rooms.rooms.map((room) =>
@@ -129,7 +143,7 @@ export async function generateSiteContent(
       propertyName: answers.propertyDetails.propertyName,
       propertyType: answers.propertyDetails.propertyType,
       tagline: answers.propertyDetails.tagline,
-      accentColor: answers.contactBranding.accentColor,
+      accentColor,
     },
     booking: {
       channelType: answers.bookingSettings.channelType,
@@ -185,6 +199,7 @@ export async function generateSiteContent(
       headline: contactCopy.headline,
       body: contactCopy.body,
     },
+    style: siteStyle,
   };
 
   const validated = siteContentSchema.parse(siteContent);

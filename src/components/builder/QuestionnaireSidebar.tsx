@@ -2,21 +2,27 @@
 
 import { QUESTIONNAIRE_STEPS } from "@/lib/constants";
 import type { QuestionnaireStepId } from "@/lib/types/enums";
+import type { QuestionnaireDraft } from "@/lib/types/questionnaire";
+import { SparkleIcon } from "@/components/marketing/MarketingIcons";
+import { QuestionnaireStepPanel } from "@/components/builder/QuestionnaireStepPanel";
 import { Button } from "@/components/ui/Button";
 
 type QuestionnaireSidebarProps = {
+  draft: QuestionnaireDraft;
+  onChange: (updater: (current: QuestionnaireDraft) => QuestionnaireDraft) => void;
   activeStepId: QuestionnaireStepId;
   isStepComplete: (stepId: QuestionnaireStepId) => boolean;
   isQuestionnaireComplete: boolean;
   onStepSelect: (stepId: QuestionnaireStepId) => void;
   onGenerate: () => void;
   isGenerating: boolean;
+  generateSuccess: string | null;
 };
 
 function CheckIcon() {
   return (
     <svg
-      className="h-4 w-4"
+      className="h-3.5 w-3.5"
       viewBox="0 0 20 20"
       fill="currentColor"
       aria-hidden
@@ -30,37 +36,59 @@ function CheckIcon() {
   );
 }
 
+function ChevronIcon({ expanded }: { expanded: boolean }) {
+  return (
+    <svg
+      className={`h-4 w-4 shrink-0 text-text-muted transition-transform ${
+        expanded ? "rotate-180" : ""
+      }`}
+      viewBox="0 0 20 20"
+      fill="currentColor"
+      aria-hidden
+    >
+      <path
+        fillRule="evenodd"
+        d="M5.23 7.21a.75.75 0 011.06.02L10 11.168l3.71-3.94a.75.75 0 111.08 1.04l-4.25 4.5a.75.75 0 01-1.08 0l-4.25-4.5a.75.75 0 01.02-1.06z"
+        clipRule="evenodd"
+      />
+    </svg>
+  );
+}
+
 export function QuestionnaireSidebar({
+  draft,
+  onChange,
   activeStepId,
   isStepComplete,
   isQuestionnaireComplete,
   onStepSelect,
   onGenerate,
   isGenerating,
+  generateSuccess,
 }: QuestionnaireSidebarProps) {
   return (
-    <aside className="flex w-full shrink-0 flex-col border-b border-border bg-surface lg:w-72 lg:border-b-0 lg:border-r">
+    <aside className="flex w-full shrink-0 flex-col border-b border-border bg-surface lg:w-[38%] lg:max-w-md lg:border-b-0 lg:border-r xl:max-w-lg">
       <div className="border-b border-border px-5 py-4">
         <h2 className="text-sm font-semibold text-text">Tell us about your property</h2>
         <p className="mt-1 text-xs text-text-muted">
-          Complete each step, then generate your site.
+          Expand each section to add your details.
         </p>
       </div>
 
-      <nav className="flex-1 overflow-y-auto px-3 py-4">
-        <ol className="space-y-1">
+      <div className="min-h-0 flex-1 overflow-y-auto">
+        <ol className="divide-y divide-border">
           {QUESTIONNAIRE_STEPS.map((step, index) => {
             const complete = isStepComplete(step.id);
-            const active = activeStepId === step.id;
+            const expanded = activeStepId === step.id;
+
             return (
               <li key={step.id}>
                 <button
                   type="button"
                   onClick={() => onStepSelect(step.id)}
-                  className={`flex w-full items-center gap-3 rounded-lg px-3 py-2.5 text-left text-sm transition ${
-                    active
-                      ? "bg-brand-50 text-brand-800"
-                      : "text-text hover:bg-surface-muted"
+                  aria-expanded={expanded}
+                  className={`flex w-full items-center gap-3 px-4 py-3 text-left transition ${
+                    expanded ? "bg-brand-50/60" : "hover:bg-surface-muted"
                   }`}
                 >
                   <span
@@ -72,25 +100,52 @@ export function QuestionnaireSidebar({
                   >
                     {complete ? <CheckIcon /> : index + 1}
                   </span>
-                  <span className="font-medium">{step.label}</span>
+                  <span
+                    className={`min-w-0 flex-1 text-sm font-medium ${
+                      expanded ? "text-brand-800" : "text-text"
+                    }`}
+                  >
+                    {step.label}
+                  </span>
+                  <ChevronIcon expanded={expanded} />
                 </button>
+
+                {expanded ? (
+                  <div className="border-t border-border bg-surface-muted/30 px-4 py-4">
+                    <QuestionnaireStepPanel
+                      activeStepId={step.id}
+                      draft={draft}
+                      onChange={onChange}
+                      embedded
+                    />
+                  </div>
+                ) : null}
               </li>
             );
           })}
         </ol>
-      </nav>
+      </div>
 
       <div className="border-t border-border p-4">
         <Button
-          className="w-full"
+          className="w-full gap-2"
           disabled={!isQuestionnaireComplete || isGenerating}
           onClick={onGenerate}
         >
-          {isGenerating ? "Generating…" : "Generate My Website ✨"}
+          <SparkleIcon className="h-4 w-4" />
+          {isGenerating ? "Generating…" : "Generate My Website"}
         </Button>
         {!isQuestionnaireComplete ? (
           <p className="mt-2 text-center text-xs text-text-muted">
-            Complete all steps to enable generation.
+            Complete all sections to enable generation.
+          </p>
+        ) : null}
+        {generateSuccess ? (
+          <p
+            className="mt-3 rounded-lg border border-brand-200 bg-brand-50 px-3 py-2 text-xs text-brand-800"
+            role="status"
+          >
+            {generateSuccess}
           </p>
         ) : null}
       </div>

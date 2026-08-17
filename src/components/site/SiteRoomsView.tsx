@@ -9,7 +9,7 @@ export function SiteRoomsView() {
   const { rooms } = siteContent;
 
   return (
-    <section className="mx-auto max-w-6xl px-4 py-16 @sm:px-6">
+    <section className="site-section mx-auto max-w-6xl px-4 @sm:px-6">
       <h1 className="font-display text-4xl font-semibold text-text">Rooms &amp; Suites</h1>
       <p className="mt-3 max-w-2xl text-text-muted">
         Choose the stay that fits your trip. Every room is designed for comfort and calm.
@@ -23,7 +23,7 @@ export function SiteRoomsView() {
               index % 2 === 1 ? "@lg:[&>*:first-child]:order-2" : ""
             }`}
           >
-            <div className="relative aspect-[4/3] overflow-hidden rounded-card">
+            <div className="site-card relative aspect-[4/3]">
               <SiteImage image={room.image} sizes="(max-width: 1024px) 100vw, 50vw" />
             </div>
             <div>

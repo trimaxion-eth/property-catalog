@@ -5,6 +5,7 @@ import {
   loadStoredSitePreview,
   saveStoredSitePreview,
 } from "@/lib/preview/session-storage";
+import { getOrCreatePreviewSiteId } from "@/lib/preview/preview-site-id";
 import type { SiteContent } from "@/lib/types/site-content";
 
 export function useStoredSiteContent() {
@@ -17,6 +18,8 @@ export function useStoredSiteContent() {
     if (stored) {
       setSiteContent(stored.siteContent);
       setPreviewSiteId(stored.previewSiteId);
+    } else {
+      setPreviewSiteId(getOrCreatePreviewSiteId());
     }
     setHydrated(true);
   }, []);

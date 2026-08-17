@@ -1,7 +1,7 @@
-import type { CSSProperties } from "react";
 import type { SiteContent } from "@/lib/types/site-content";
+import { siteStyleToCssProperties } from "@/lib/site/apply-site-style";
 import { SiteFooter } from "@/components/site/SiteFooter";
-import { SiteHeader } from "@/components/site/SiteHeader";
+import { SiteNavSection } from "@/components/site/SiteNavSection";
 
 type SiteLayoutProps = {
   siteContent: SiteContent;
@@ -11,10 +11,8 @@ type SiteLayoutProps = {
 export function SiteLayout({ siteContent, children }: SiteLayoutProps) {
   return (
     <div
-      className="site-template flex min-h-screen flex-col bg-white text-text"
-      style={
-        { "--site-accent": siteContent.branding.accentColor } as CSSProperties
-      }
+      className="site-template flex min-h-screen flex-col"
+      style={siteStyleToCssProperties(siteContent)}
     >
       <a
         href="#site-main-content"
@@ -22,7 +20,7 @@ export function SiteLayout({ siteContent, children }: SiteLayoutProps) {
       >
         Skip to main content
       </a>
-      <SiteHeader siteContent={siteContent} />
+      <SiteNavSection siteContent={siteContent} />
       <main id="site-main-content" className="flex-1">
         {children}
       </main>

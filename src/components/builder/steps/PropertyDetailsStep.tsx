@@ -5,26 +5,24 @@ import {
   PROPERTY_TYPES,
 } from "@/lib/constants";
 import type { QuestionnaireDraft } from "@/lib/types/questionnaire";
+import type { StepProps } from "@/components/builder/steps/types";
 import { FormField } from "@/components/ui/FormField";
 import { Input } from "@/components/ui/Input";
 import { Select } from "@/components/ui/Select";
 
-type StepProps = {
-  draft: QuestionnaireDraft;
-  onChange: (updater: (current: QuestionnaireDraft) => QuestionnaireDraft) => void;
-};
-
-export function PropertyDetailsStep({ draft, onChange }: StepProps) {
+export function PropertyDetailsStep({ draft, onChange, embedded = false }: StepProps) {
   const { propertyDetails } = draft;
 
   return (
-    <div className="space-y-5">
-      <div>
-        <h1 className="text-xl font-semibold text-text">Property Details</h1>
-        <p className="mt-1 text-sm text-text-muted">
-          Name your property and set the tone for your website.
-        </p>
-      </div>
+    <div className={embedded ? "space-y-4" : "space-y-5"}>
+      {!embedded ? (
+        <div>
+          <h1 className="text-xl font-semibold text-text">Property Details</h1>
+          <p className="mt-1 text-sm text-text-muted">
+            Name your property and set the tone for your website.
+          </p>
+        </div>
+      ) : null}
 
       <FormField label="Property name" htmlFor="propertyName">
         <Input

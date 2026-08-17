@@ -117,10 +117,10 @@ property-catalog/
 
 ### 3. Marketing landing (`/`)
 
-- [ ] Hero matching `promo.png` pitch (headline, subhead, 4-step journey icons)
-- [ ] Trust bar footer: Mobile Responsive, SEO Optimized, Fast Loading, Secure & SSL, Ready for Guests
-- [ ] Primary CTA → `/builder`
-- [ ] Use resolved product name from Q1 in all copy
+- [x] Hero matching `promo.png` pitch (headline, subhead, 4-step journey icons)
+- [x] Trust bar footer: Mobile Responsive, SEO Optimized, Fast Loading, Secure & SSL, Ready for Guests
+- [x] Primary CTA → `/builder`
+- [x] Use resolved product name from Q1 in all copy
 
 ### 4. Builder dashboard (`/builder`)
 

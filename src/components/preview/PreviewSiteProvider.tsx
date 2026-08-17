@@ -2,8 +2,10 @@
 
 import Link from "next/link";
 import { SiteContentProvider } from "@/hooks/site-content-context";
+import { SoftPreviewProvider } from "@/hooks/useSoftPreview";
 import { usePreviewSiteContent } from "@/hooks/usePreviewSiteContent";
 import { SiteLayout } from "@/components/site/SiteLayout";
+import { LayoutControlsToggle } from "@/components/preview/rotatable/LayoutControlsToggle";
 
 type PreviewSiteProviderProps = {
   siteId: string;
@@ -38,7 +40,12 @@ export function PreviewSiteProvider({ siteId, children }: PreviewSiteProviderPro
 
   return (
     <SiteContentProvider siteContent={siteContent}>
-      <SiteLayout siteContent={siteContent}>{children}</SiteLayout>
+      <SoftPreviewProvider siteId={siteContent.id}>
+        <div className="fixed right-4 top-4 z-50">
+          <LayoutControlsToggle className="shadow-sm" />
+        </div>
+        <SiteLayout siteContent={siteContent}>{children}</SiteLayout>
+      </SoftPreviewProvider>
     </SiteContentProvider>
   );
 }

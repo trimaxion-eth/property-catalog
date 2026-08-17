@@ -1,6 +1,7 @@
 import { z } from "zod";
 import { questionnaireAnswersSchema } from "@/lib/validation/questionnaire";
 import { siteContentSchema } from "@/lib/validation/site-content";
+import { layoutPreferencesPayloadSchema } from "@/lib/validation/layout-preferences";
 
 export const apiErrorSchema = z.object({
   error: z.string(),
@@ -15,6 +16,7 @@ export const apiSuccessSchema = <T extends z.ZodTypeAny>(dataSchema: T) =>
 export const generateSiteRequestSchema = z.object({
   answers: questionnaireAnswersSchema,
   previewSiteId: z.string().min(1).optional(),
+  layoutPreferences: layoutPreferencesPayloadSchema.optional(),
 });
 
 export const generateSiteResponseSchema = z.object({

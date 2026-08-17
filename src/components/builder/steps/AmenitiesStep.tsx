@@ -1,16 +1,11 @@
 "use client";
 
 import { AMENITY_OPTIONS } from "@/lib/constants";
-import type { QuestionnaireDraft } from "@/lib/types/questionnaire";
+import type { StepProps } from "@/components/builder/steps/types";
 import { FormField } from "@/components/ui/FormField";
 import { Textarea } from "@/components/ui/Textarea";
 
-type StepProps = {
-  draft: QuestionnaireDraft;
-  onChange: (updater: (current: QuestionnaireDraft) => QuestionnaireDraft) => void;
-};
-
-export function AmenitiesStep({ draft, onChange }: StepProps) {
+export function AmenitiesStep({ draft, onChange, embedded = false }: StepProps) {
   const { amenities } = draft;
 
   function toggleAmenity(name: string) {
@@ -32,15 +27,17 @@ export function AmenitiesStep({ draft, onChange }: StepProps) {
   }
 
   return (
-    <div className="space-y-5">
-      <div>
-        <h1 className="text-xl font-semibold text-text">Amenities &amp; Services</h1>
-        <p className="mt-1 text-sm text-text-muted">
-          Select everything you offer — we&apos;ll weave it into your site copy.
-        </p>
-      </div>
+    <div className={embedded ? "space-y-4" : "space-y-5"}>
+      {!embedded ? (
+        <div>
+          <h1 className="text-xl font-semibold text-text">Amenities &amp; Services</h1>
+          <p className="mt-1 text-sm text-text-muted">
+            Select everything you offer — we&apos;ll weave it into your site copy.
+          </p>
+        </div>
+      ) : null}
 
-      <div className="grid gap-2 sm:grid-cols-2">
+      <div className={`grid gap-2 ${embedded ? "grid-cols-1" : "sm:grid-cols-2"}`}>
         {AMENITY_OPTIONS.map((amenity) => {
           const checked = amenities.selectedAmenities.includes(amenity);
           return (

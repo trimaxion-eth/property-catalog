@@ -3,13 +3,26 @@
 import { useCallback, useEffect, useRef, useState } from "react";
 import { generateSite } from "@/lib/api/generate-site";
 import { handleClientError } from "@/lib/errors";
+import { loadLayoutPreferences } from "@/lib/preview/layout-preferences-storage";
+import { seedLayoutPreferencesFromStyle } from "@/lib/preview/seed-layout-preferences";
+import { syncLayoutPreferences } from "@/lib/preview/sync-layout-preferences";
+import { resolveSiteStyle } from "@/lib/site/apply-site-style";
 import { toQuestionnaireAnswers } from "@/lib/questionnaire/helpers";
 import { BuilderNav } from "@/components/builder/BuilderNav";
 import { BuilderPreviewPane } from "@/components/builder/BuilderPreviewPane";
 import { QuestionnaireSidebar } from "@/components/builder/QuestionnaireSidebar";
-import { QuestionnaireStepPanel } from "@/components/builder/QuestionnaireStepPanel";
 import { useQuestionnaireDraft } from "@/hooks/useQuestionnaireDraft";
 import { useStoredSiteContent } from "@/hooks/useStoredSiteContent";
+import type { BuilderJourneyStepId } from "@/lib/types/enums";
+
+function resolveBuilderJourneyStep(
+  isGenerating: boolean,
+  hasGeneratedSite: boolean,
+): BuilderJourneyStepId {
+  if (isGenerating) return "generate";
+  if (hasGeneratedSite) return "customize";
+  return "describe";
+}
 
 export function BuilderShell() {
   const {
@@ -61,23 +74,45 @@ export function BuilderShell() {
 
     try {
       const answers = toQuestionnaireAnswers(draft);
+      const siteId = previewSiteId ?? siteContent?.id;
+      const layoutPreferences = siteId
+        ? loadLayoutPreferences(siteId) ?? undefined
+        : undefined;
 
       const result = await generateSite({
         answers,
         previewSiteId: previewSiteId ?? undefined,
+        layoutPreferences,
       });
 
       persistSiteContent(result.siteContent, result.previewSiteId);
+
+      const mergedLayoutPreferences = seedLayoutPreferencesFromStyle(
+        result.previewSiteId,
+        resolveSiteStyle(result.siteContent),
+        layoutPreferences,
+      );
+      await syncLayoutPreferences(
+        result.previewSiteId,
+        mergedLayoutPreferences,
+      );
+
       generatedDraftSnapshot.current = JSON.stringify(draft);
       skipStaleCheck.current = true;
       setIsPreviewStale(false);
-      setGenerateSuccess("Your website is ready. Browse the preview or open the full site.");
+
+      const styleRationale = result.siteContent.style?.rationale;
+      setGenerateSuccess(
+        styleRationale
+          ? `AI copy and styling are ready — ${styleRationale} Open the full site or keep exploring layouts.`
+          : "AI copy is ready — your layout picks are saved. Open the full site or keep exploring.",
+      );
     } catch (error) {
       setGenerationError(handleClientError(error));
     } finally {
       setIsGenerating(false);
     }
-  }, [draft, persistSiteContent, previewSiteId]);
+  }, [draft, persistSiteContent, previewSiteId, siteContent?.id]);
 
   if (!draftHydrated || !isPreviewHydrated) {
     return (
@@ -89,48 +124,36 @@ export function BuilderShell() {
 
   return (
     <div className="flex min-h-screen flex-col bg-surface-muted">
-      <BuilderNav />
+      <BuilderNav
+        activeJourneyStep={resolveBuilderJourneyStep(
+          isGenerating,
+          Boolean(siteContent),
+        )}
+      />
 
       <div className="flex min-h-0 flex-1 flex-col lg:flex-row">
         <QuestionnaireSidebar
+          draft={draft}
+          onChange={updateDraft}
           activeStepId={activeStepId}
           isStepComplete={isStepComplete}
           isQuestionnaireComplete={isComplete}
           onStepSelect={setActiveStepId}
           onGenerate={() => void handleGenerate()}
           isGenerating={isGenerating}
+          generateSuccess={generateSuccess}
         />
 
-        <div className="flex min-h-0 flex-1 flex-col xl:flex-row">
-          <section className="min-h-0 flex-1 overflow-y-auto p-6 lg:p-8">
-            <div className="mx-auto max-w-2xl">
-              <QuestionnaireStepPanel
-                activeStepId={activeStepId}
-                draft={draft}
-                onChange={updateDraft}
-              />
-              {generateSuccess ? (
-                <p
-                  className="mt-6 rounded-lg border border-brand-200 bg-brand-50 px-4 py-3 text-sm text-brand-800"
-                  role="status"
-                >
-                  {generateSuccess}
-                </p>
-              ) : null}
-            </div>
-          </section>
-
-          <BuilderPreviewPane
-            draft={draft}
-            siteContent={siteContent}
-            previewSiteId={previewSiteId}
-            isQuestionnaireComplete={isComplete}
-            isGenerating={isGenerating}
-            generationError={generationError}
-            isPreviewStale={isPreviewStale}
-            onRetryGenerate={() => void handleGenerate()}
-          />
-        </div>
+        <BuilderPreviewPane
+          draft={draft}
+          siteContent={siteContent}
+          previewSiteId={previewSiteId}
+          isQuestionnaireComplete={isComplete}
+          isGenerating={isGenerating}
+          generationError={generationError}
+          isPreviewStale={isPreviewStale}
+          onRetryGenerate={() => void handleGenerate()}
+        />
       </div>
     </div>
   );

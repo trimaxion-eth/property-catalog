@@ -5,15 +5,10 @@ import {
   BOOKING_CHANNEL_TYPES,
 } from "@/lib/constants";
 import type { BookingChannelType } from "@/lib/types/enums";
-import type { QuestionnaireDraft } from "@/lib/types/questionnaire";
+import type { StepProps } from "@/components/builder/steps/types";
 import { FormField } from "@/components/ui/FormField";
 import { Input } from "@/components/ui/Input";
 import { Select } from "@/components/ui/Select";
-
-type StepProps = {
-  draft: QuestionnaireDraft;
-  onChange: (updater: (current: QuestionnaireDraft) => QuestionnaireDraft) => void;
-};
 
 const channelPlaceholders: Record<BookingChannelType, string> = {
   url: "https://booking.com/hotel/your-property",
@@ -27,17 +22,19 @@ const channelLabels: Record<BookingChannelType, string> = {
   whatsapp: "WhatsApp number",
 };
 
-export function BookingSettingsStep({ draft, onChange }: StepProps) {
+export function BookingSettingsStep({ draft, onChange, embedded = false }: StepProps) {
   const { bookingSettings } = draft;
 
   return (
-    <div className="space-y-5">
-      <div>
-        <h1 className="text-xl font-semibold text-text">Booking Settings</h1>
-        <p className="mt-1 text-sm text-text-muted">
-          Every &quot;Book Now&quot; button on your site will use this single channel.
-        </p>
-      </div>
+    <div className={embedded ? "space-y-4" : "space-y-5"}>
+      {!embedded ? (
+        <div>
+          <h1 className="text-xl font-semibold text-text">Booking Settings</h1>
+          <p className="mt-1 text-sm text-text-muted">
+            Every &quot;Book Now&quot; button on your site will use this single channel.
+          </p>
+        </div>
+      ) : null}
 
       <FormField label="Booking channel" htmlFor="channelType">
         <Select

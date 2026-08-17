@@ -1,17 +1,12 @@
 "use client";
 
-import type { QuestionnaireDraft } from "@/lib/types/questionnaire";
+import type { StepProps } from "@/components/builder/steps/types";
 import { PropertyMapPicker } from "@/components/builder/PropertyMapPicker";
 import { Button } from "@/components/ui/Button";
 import { FormField } from "@/components/ui/FormField";
 import { Input } from "@/components/ui/Input";
 
-type StepProps = {
-  draft: QuestionnaireDraft;
-  onChange: (updater: (current: QuestionnaireDraft) => QuestionnaireDraft) => void;
-};
-
-export function LocationStep({ draft, onChange }: StepProps) {
+export function LocationStep({ draft, onChange, embedded = false }: StepProps) {
   const { location } = draft;
 
   function updateHighlight(index: number, value: string) {
@@ -27,13 +22,15 @@ export function LocationStep({ draft, onChange }: StepProps) {
   }
 
   return (
-    <div className="space-y-5">
-      <div>
-        <h1 className="text-xl font-semibold text-text">Location</h1>
-        <p className="mt-1 text-sm text-text-muted">
-          Help guests find you and discover what&apos;s nearby.
-        </p>
-      </div>
+    <div className={embedded ? "space-y-4" : "space-y-5"}>
+      {!embedded ? (
+        <div>
+          <h1 className="text-xl font-semibold text-text">Location</h1>
+          <p className="mt-1 text-sm text-text-muted">
+            Help guests find you and discover what&apos;s nearby.
+          </p>
+        </div>
+      ) : null}
 
       <FormField label="Street address" htmlFor="addressLine">
         <Input
@@ -49,7 +46,7 @@ export function LocationStep({ draft, onChange }: StepProps) {
         />
       </FormField>
 
-      <div className="grid gap-3 sm:grid-cols-2">
+      <div className={`grid gap-3 ${embedded ? "grid-cols-1" : "sm:grid-cols-2"}`}>
         <FormField label="City" htmlFor="city">
           <Input
             id="city"
@@ -93,6 +90,7 @@ export function LocationStep({ draft, onChange }: StepProps) {
       <PropertyMapPicker
         latitude={location.latitude}
         longitude={location.longitude}
+        compact={embedded}
         onChange={(latitude, longitude) =>
           onChange((current) => ({
             ...current,
@@ -132,7 +130,7 @@ export function LocationStep({ draft, onChange }: StepProps) {
                   }))
                 }
               >
-              Remove
+                Remove
               </Button>
             ) : null}
           </div>

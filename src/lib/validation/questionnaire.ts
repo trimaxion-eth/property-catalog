@@ -109,12 +109,16 @@ export const contactBrandingSchema = z.object({
   email: z.string().trim().email("Valid email is required"),
   phone: z.string().trim().max(40).optional(),
   accentColor: hexColorSchema,
+  stylePreference: z.enum(["auto", "refined", "bold"]).optional(),
+  accentColorSource: z.enum(["owner", "ai"]).optional(),
 });
 
 export const contactBrandingDraftSchema = z.object({
   email: z.string().max(200),
   phone: z.string().max(40).optional(),
   accentColor: hexColorSchema,
+  stylePreference: z.enum(["auto", "refined", "bold"]).optional(),
+  accentColorSource: z.enum(["owner", "ai"]).optional(),
 });
 
 export const bookingSettingsSchema = z

@@ -16,7 +16,7 @@ export function SiteContactView() {
   ].filter(Boolean);
 
   return (
-    <section className="mx-auto max-w-6xl px-4 py-16 @sm:px-6">
+    <section className="site-section mx-auto max-w-6xl px-4 @sm:px-6">
       <h1 className="font-display text-4xl font-semibold text-text">
         {contactPage.headline}
       </h1>

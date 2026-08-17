@@ -6,6 +6,7 @@ import { getRasterTileLayerConfig } from "@/lib/map/tileLayerConfig";
 type PropertyMapPickerProps = {
   latitude: number;
   longitude: number;
+  compact?: boolean;
   onChange: (latitude: number, longitude: number) => void;
 };
 
@@ -20,6 +21,7 @@ function hasValidCoordinates(latitude: number, longitude: number): boolean {
 export function PropertyMapPicker({
   latitude,
   longitude,
+  compact = false,
   onChange,
 }: PropertyMapPickerProps) {
   const hostRef = useRef<HTMLDivElement>(null);
@@ -99,7 +101,11 @@ export function PropertyMapPicker({
 
   return (
     <div className="space-y-2">
-      <div className="h-64 w-full overflow-hidden rounded-card border border-border">
+      <div
+        className={`w-full overflow-hidden rounded-card border border-border ${
+          compact ? "h-48" : "h-64"
+        }`}
+      >
         <div ref={hostRef} className="h-full w-full" />
       </div>
       <p className="text-xs text-text-muted">

@@ -8,7 +8,7 @@ export function SiteGalleryView() {
   const { gallery } = siteContent;
 
   return (
-    <section className="mx-auto max-w-6xl px-4 py-16 @sm:px-6">
+    <section className="site-section mx-auto max-w-6xl px-4 @sm:px-6">
       <h1 className="font-display text-4xl font-semibold text-text">{gallery.headline}</h1>
       <p className="mt-3 max-w-2xl text-text-muted">
         A glimpse of the spaces, views, and details that define your stay.
