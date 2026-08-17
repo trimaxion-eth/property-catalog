@@ -31,6 +31,81 @@ const BUTTON_RADIUS = {
 
 const CARD_RADIUS = "0.75rem";
 
+/**
+ * Contrast guard for the owner-chosen accent.
+ * Straight `--site-accent` on light surfaces or white text on pale accents is
+ * unreadable, so the accent is always paired with a computed foreground:
+ * - `--site-accent-foreground`  — text placed ON the accent (CTA buttons)
+ * - `--site-accent-readable`    — the accent kept readable as text on the
+ *                                 light site surfaces (accent links)
+ */
+const ACCENT_FOREGROUND_LIGHT = "#ffffff";
+const ACCENT_FOREGROUND_DARK = "#0f172a"; // slate-900, matches --color-text
+
+const ACCENT_HEX_RE = /^#([0-9a-f]{3}|[0-9a-f]{6})$/i;
+
+function hexToRgb(hex: string): { r: number; g: number; b: number } | null {
+  const match = ACCENT_HEX_RE.exec(hex.trim());
+  if (!match) return null;
+  if (match[1].length === 3) {
+    return {
+      r: parseInt(match[1][0] + match[1][0], 16),
+      g: parseInt(match[1][1] + match[1][1], 16),
+      b: parseInt(match[1][2] + match[1][2], 16),
+    };
+  }
+  return {
+    r: parseInt(match[1].slice(0, 2), 16),
+    g: parseInt(match[1].slice(2, 4), 16),
+    b: parseInt(match[1].slice(4, 6), 16),
+  };
+}
+
+function toLinear(channel: number): number {
+  const c = channel / 255;
+  return c <= 0.03928 ? c / 12.92 : Math.pow((c + 0.055) / 1.055, 2.4);
+}
+
+/** WCAG relative luminance of an sRGB hex color, or null when unparsable. */
+function relativeLuminance(hex: string): number | null {
+  const rgb = hexToRgb(hex);
+  if (!rgb) return null;
+  return (
+    0.2126 * toLinear(rgb.r) +
+    0.7152 * toLinear(rgb.g) +
+    0.0722 * toLinear(rgb.b)
+  );
+}
+
+function contrastRatio(luminanceA: number, luminanceB: number): number {
+  const [lighter, darker] =
+    luminanceA >= luminanceB ? [luminanceA, luminanceB] : [luminanceB, luminanceA];
+  return (lighter + 0.05) / (darker + 0.05);
+}
+
+type AccentContrast = {
+  foreground: string;
+  readable: string;
+};
+
+function resolveAccentContrast(accentColor: string): AccentContrast {
+  const accentLuminance = relativeLuminance(accentColor);
+  const darkLuminance = relativeLuminance(ACCENT_FOREGROUND_DARK) ?? 0;
+  if (accentLuminance === null) {
+    // Hex is validated at every boundary; keep today's behavior as a fallback.
+    return { foreground: ACCENT_FOREGROUND_LIGHT, readable: accentColor };
+  }
+  // Compare white text vs dark slate-900 text on the accent background and
+  // keep whichever pair yields the higher WCAG contrast ratio.
+  const withWhite = contrastRatio(1, accentLuminance);
+  const withDark = contrastRatio(accentLuminance, darkLuminance);
+  const useDark = withDark > withWhite;
+  return {
+    foreground: useDark ? ACCENT_FOREGROUND_DARK : ACCENT_FOREGROUND_LIGHT,
+    readable: useDark ? ACCENT_FOREGROUND_DARK : accentColor,
+  };
+}
+
 const TYPOGRAPHY_DISPLAY = {
   "classic-serif": "var(--font-playfair), ui-serif, Georgia, serif",
   "clean-modern": "var(--font-inter), ui-sans-serif, system-ui, sans-serif",
@@ -68,9 +143,13 @@ export function siteStyleToCssProperties(
   const style = resolveSiteStyle(siteContent);
   const surfaces = SURFACE_VALUES[style.surface];
   const { components } = style;
+  const accentColor = siteContent.branding.accentColor;
+  const accentContrast = resolveAccentContrast(accentColor);
 
   return {
-    "--site-accent": siteContent.branding.accentColor,
+    "--site-accent": accentColor,
+    "--site-accent-foreground": accentContrast.foreground,
+    "--site-accent-readable": accentContrast.readable,
     "--site-surface": surfaces.surface,
     "--site-surface-muted": surfaces.muted,
     "--site-border": surfaces.border,

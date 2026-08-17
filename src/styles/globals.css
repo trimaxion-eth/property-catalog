@@ -69,6 +69,8 @@
 /* Generated customer sites — owner tokens via inline style on root */
 .site-template {
   --site-accent: var(--color-brand-600);
+  --site-accent-foreground: #ffffff;
+  --site-accent-readable: var(--site-accent);
   --site-surface: #ffffff;
   --site-surface-muted: #f8fafc;
   --site-border: #e2e8f0;
@@ -120,7 +122,12 @@
 }
 
 .site-template .site-link--accent {
-  color: var(--site-accent);
+  color: var(--site-accent-readable);
+}
+
+.site-template .site-link--accent:focus-visible {
+  outline: 2px solid var(--site-accent-readable);
+  outline-offset: 2px;
 }
 
 .site-template .site-link--underline {

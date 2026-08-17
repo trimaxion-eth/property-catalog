@@ -31,7 +31,7 @@ export function BookNowButton({
   return (
     <a
       href={href}
-      className={`site-cta inline-flex items-center justify-center font-medium text-white transition hover:opacity-90 ${sizeClasses[size]} ${className}`}
+      className={`site-cta inline-flex items-center justify-center font-medium text-(color:--site-accent-foreground) transition hover:opacity-90 focus-visible:ring-2 focus-visible:ring-brand-500/40 focus-visible:ring-offset-2 ${sizeClasses[size]} ${className}`}
       style={{ backgroundColor: "var(--site-accent)" }}
       aria-label={`${siteContent.booking.ctaLabel} — ${siteContent.branding.propertyName}`}
       {...(opensNewTab
