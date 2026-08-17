@@ -26,9 +26,18 @@ Delegate in parallel when tasks are independent. Never duplicate work an agent i
 
 The project is at **Phase 1 complete**; Phase 2 (auth, SQLite, publish), Phase 3 (booking), Phase 4 (growth) are not started. Respect this: do not pull Phase 2+ work into a Phase 1 task unless the user explicitly changes scope. When scope questions arise, consult `product`.
 
+## Merging policy
+
+When the `/drive` loop (or the user) asks you to complete the cycle, you may merge PRs:
+
+- Merge only when **green**: `pnpm verify` passed AND `reviewer` reported no blockers.
+- Merge with `gh pr merge <pr> --squash --delete-branch`; close the linked issue.
+- If blockers remain, leave the PR open and file follow-up issues instead.
+- **Never merge** a PR that changes `.opencode/`, `.cursor/`, or `opencode.json` — those are human-only.
+
 ## Non-negotiables
 
 - Follow `.cursor/rules/` conventions (domain types in `src/lib/types/`, repositories for DB access, `SiteContent` JSON as the single contract between builder / LLM / renderer).
 - `pnpm` only; TypeScript strict; App Router.
 - Verification commands: `pnpm typecheck`, `pnpm lint`, `pnpm build`, or the combined `pnpm verify`.
-- Do not commit unless the user explicitly asks.
+- Do not commit unless the user explicitly asks (the `/drive` command counts as an explicit request).
